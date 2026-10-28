@@ -1,4 +1,4 @@
-# Redrawn reel pipeline (scripts live in session scratchpad `work/`, not committed)
+# Redrawn reel pipeline (Kashmir scripts in `pipeline/kashmir/`; original kit in `redrawn_kit/`; Natural Earth GeoJSON and ASR models not committed, download them)
 Scripts: `edit_vo.py` (vo_orig.mp3→vo_tight.wav, trims gaps) · `align.py` (ve16.wav→asr_words.json, sherpa zipformer) · `mkvo2.py` (script+pauses→vo_final.wav, video3d/timeline.json, timeline_full.json) · `mkmaps.py` (Natural Earth→assets/map_*.png/json) · `render.cjs stills T,T[,nocap]|full A B` (3D+captions→part_A.mp4) · `sfx.py` (SFX+music+duck→mix_final.wav, −14 LUFS) · `hero.cjs T,T` + `shotcover.cjs "img=…" out.png` (thumbnail).
 Order: 1 `edit_vo.py` → 2 ffmpeg atempo=1.09,EQ,comp→ve48/ve16.wav → 3 `align.py` → 4 edit script/pauses in `mkvo2.py`, run → 5 `mkmaps.py` → 6 `python3 -m http.server 8774` in video3d → 7 `render.cjs stills …` (contact sheets, fix) → 8 `render.cjs full 0 746 / 746 1492 / 1492 2235` in parallel → 9 `sfx.py` → 10 ffmpeg concat + mux (crf22, aac192) → 11 `hero.cjs`, `shotcover.cjs` → caption.
 Manual fixes this video:

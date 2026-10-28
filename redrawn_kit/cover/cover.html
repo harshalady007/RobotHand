@@ -1,0 +1,46 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:M;src:url(node_modules/@fontsource/montserrat/files/montserrat-latin-900-normal.woff2);font-weight:900}
+@font-face{font-family:M;src:url(node_modules/@fontsource/montserrat/files/montserrat-latin-800-normal.woff2);font-weight:800}
+@font-face{font-family:M;src:url(node_modules/@fontsource/montserrat/files/montserrat-latin-700-normal.woff2);font-weight:700}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;background:#000;overflow:hidden}
+.c{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:M,sans-serif}
+.bg{position:absolute;inset:0;background-size:cover;background-position:center;transform:scale(var(--z,1.08));transform-origin:var(--o,50% 40%);filter:saturate(1.15) contrast(1.05)}
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.05) 26%,rgba(0,0,0,0) 46%,rgba(0,0,0,.55) 62%,rgba(0,0,0,.94) 84%,#000 100%)}
+.vig{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,rgba(0,0,0,0) 45%,rgba(0,0,0,.55) 100%)}
+.tint{position:absolute;inset:0;mix-blend-mode:color;opacity:.18}
+.glow{position:absolute;border-radius:50%;filter:blur(60px);mix-blend-mode:screen}
+.top{position:absolute;top:262px;left:72px;right:72px;display:flex;align-items:center;gap:22px}
+.logo{width:108px;height:108px;border-radius:50%;background:url(coverimg/logo.png) center/104% no-repeat;box-shadow:0 0 0 4px #e9c98a,0 8px 24px rgba(0,0,0,.6)}
+.brand{color:#f2e3c4;font-weight:800;font-size:34px;letter-spacing:.18em;line-height:1.15;text-shadow:0 3px 10px rgba(0,0,0,.8)}
+.brand small{display:block;font-size:24px;letter-spacing:.32em;color:#e9c98a;font-weight:700}
+.ep{position:absolute;top:288px;right:72px;padding:14px 24px;border-radius:999px;background:rgba(0,0,0,.55);border:3px solid var(--acc);color:#fff;font-weight:800;font-size:26px;letter-spacing:.14em}
+.kick{position:absolute;left:72px;right:72px;top:var(--kt,1060px);color:var(--acc);font-weight:800;font-size:40px;letter-spacing:.2em;text-shadow:0 4px 14px rgba(0,0,0,.9)}
+.title{position:absolute;left:60px;right:60px;top:var(--tt,1120px)}
+.l{display:block;color:#fff;font-weight:900;font-size:var(--fs,124px);line-height:.98;letter-spacing:-.01em;text-transform:uppercase;-webkit-text-stroke:6px #000;paint-order:stroke fill;text-shadow:0 10px 0 rgba(0,0,0,.55),0 18px 40px rgba(0,0,0,.7)}
+.box{display:inline-block;margin-top:18px;padding:6px 30px 14px;background:var(--acc);color:var(--boxtxt,#fff);font-weight:900;font-size:var(--bs,150px);line-height:1;text-transform:uppercase;transform:rotate(-2.5deg);border:7px solid #000;box-shadow:12px 14px 0 #000;-webkit-text-stroke:0}
+.sub{position:absolute;left:72px;right:72px;bottom:262px;color:#fff;font-weight:700;font-size:38px;line-height:1.25;opacity:.95;text-shadow:0 3px 12px #000}
+.sub b{color:var(--acc)}
+.cta{position:absolute;left:0;right:0;bottom:120px;text-align:center;color:#fff;font-weight:800;font-size:30px;letter-spacing:.24em;opacity:.85}
+.cta span{display:inline-block;margin-left:12px;width:0;height:0;border-left:22px solid var(--acc);border-top:14px solid transparent;border-bottom:14px solid transparent;vertical-align:-4px}
+.grain{position:absolute;inset:0;opacity:.07;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>")}
+.safe{position:absolute;left:0;right:0;top:240px;height:1440px;outline:4px dashed rgba(0,255,0,.7);display:none}
+</style></head><body><div id="root"></div>
+<script>
+const C={
+ ussr:{img:'coverimg/ussr3d_25.60.png',acc:'#e3262b',z:1.18,o:'50% 30%',ep:'EP. 01 · HISTORY',kick:'25 DECEMBER 1991',lines:['The day a','superpower'],box:'Vanished',fs:118,bs:160,kt:1010,tt:1068,sub:'One flag lowered. One empire gone. <b>15 nations born.</b>',glow:[['#ff2a2a',540,330,520]]},
+ france:{img:'coverimg/france3d_04.40.png',acc:'#ff7a1a',z:1.12,o:'50% 42%',ty:-150,ep:'EP. 02 · BREAKING',kick:'17 OCTOBER 2026',lines:['France is'],box:'On fire',fs:142,bs:176,kt:1040,tt:1098,sub:'It started with students. It ended with <b>550,000 on the streets.</b>',glow:[['#ff6a1a',780,820,520],['#2a5aff',220,700,420]]},
+ osama:{img:'coverimg/osama3d_20.60.png',acc:'#ff3b2f',z:1.1,o:'50% 20%',ty:40,ep:'',kick:'',lines:['The hunt for','Bin Laden'],box:'Ended',fs:108,bs:170,kt:1010,tt:1110,sub:'',dk:1,glow:[['#ff2a2a',540,520,520]]},
+ pager:{img:'coverimg/pager3d_01.90.png',acc:'#7dff5a',boxtxt:'#06120a',z:1.25,o:'50% 30%',ep:'EP. 03 · SPY FILES',kick:'17 SEPTEMBER 2024',lines:['One message.','Thousands of'],box:'Explosions',fs:104,bs:116,kt:1020,tt:1078,sub:'A real spy operation, <b>planned years in advance.</b>',glow:[['#7dff5a',540,640,360],['#ff2020',540,1000,700]]}
+};
+const k=new URLSearchParams(location.search).get('c')||'ussr', d=C[k], safe=new URLSearchParams(location.search).get('safe');
+document.getElementById('root').innerHTML=`<div class="c" style="--acc:${d.acc};--z:${d.z};--o:${d.o};--fs:${d.fs}px;--bs:${d.bs}px;--kt:${d.kt}px;--tt:${d.tt}px;--boxtxt:${d.boxtxt||'#fff'}">
+ <div class="bg" style="background-image:url(${d.img});margin-top:${d.ty||0}px;height:${1920-(d.ty||0)}px"></div>
+ ${(d.glow||[]).map(([c,x,y,r])=>`<div class="glow" style="background:${c};left:${x-r/2}px;top:${y-r/2}px;width:${r}px;height:${r}px;opacity:.38"></div>`).join('')}
+ <div class="vig"></div><div class="shade"></div>${d.dk?'<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 48%,rgba(0,0,0,.78) 60%,rgba(0,0,0,.9) 100%)"></div>':''}
+ <div class="top"><div class="logo"></div><div class="brand">REDRAWN<small>STORIES</small></div></div>
+ <div class="title" style="top:${d.tt+110}px">${d.lines.map(l=>`<span class="l">${l}</span>`).join('')}<span class="box">${d.box}</span></div>
+ <div class="cta">WATCH TILL THE END<span></span></div>
+ <div class="grain"></div>${safe?'<div class="safe" style="display:block"></div>':''}</div>`;
+document.fonts.ready.then(()=>{window.ready=true});
+</script></body></html>
