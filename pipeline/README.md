@@ -9,3 +9,11 @@ Manual fixes this video:
 - Kit bugs: heli bank sign inverted (own `heliFly`), heli underside black, char shadow ignored y, flag pole offset.
 - Soldiers/chars enlarged (2.4 m) and moved on-axis (portrait fov is narrow); Siachen parkas recoloured for contrast.
 - Audio: added comp+4×-oversampled limiter at 0.62 so AAC output stays ≤ −1 dBTP at −14 LUFS.
+
+## America reel (`pipeline/america/`, "Why is America everywhere?")
+Same order as above; differences:
+- `edit_vo.py` is now in the repo (mp3 → w/vo_tight.wav; gaps >.38 s → .20 s, .14–.38 s → .08 s). ASR models in `w/`, world data in `ne/` (both not committed).
+- `mkworld.py` (Natural Earth 10m *India-POV* countries + disputed areas → 6144² equirect globe texture, PoK + Aksai Chin inside India's boundary and hatched; US outline json). Labels ("occupied by Pakistan/China") are drawn as projected chips in `main.js` (`occ()`).
+- Sets: `kglobe.js` (globe, pins, great-circle arcs, lanes), `kbase.js` (air base: jets with gear, helis, trucks, C-17), `ksea.js` (waves, destroyer / carrier / container ships, anchor drop under gravity); helpers in `kamerica.js` (flags, trucks with wheel-spin = distance/r, `flyAttitude`).
+- Physics: jets take off on a constant-accel roll then rotate and climb (`takeoff`), turns use `turnP` so bank = atan(v·yawRate/g); helis use `heliFly`; ships pitch/roll from the wave field `waveH`.
+- `render.cjs stills` needs the file server (`python3 -m http.server 8774` in `video3d/`); `hero.cjs T noover` renders a caption-free, overlay-free hero frame for the cover.

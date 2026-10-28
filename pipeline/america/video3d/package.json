@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@fontsource/montserrat": "^5.3.0",
+    "three": "^0.169.0"
+  }
+}
