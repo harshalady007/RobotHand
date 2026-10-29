@@ -1,0 +1,8 @@
+ne/
+video3d/node_modules/
+stills/
+video3d/part_*.mp4
+work/
+cover/node_modules
+cover/coverimg/hero_*.png
+video3d/dbg.cjs
