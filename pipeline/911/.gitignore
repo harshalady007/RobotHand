@@ -1,0 +1,16 @@
+w/
+ne/
+stills/
+sheets/
+node_modules/
+*.wav
+part_*.mp4
+render_*.log
+__pycache__/
+video3d/assets/map_world.png
+cover/node_modules
+cover/coverimg/hero*.png
+vframes/
+911_Redrawn.mp4
+*.m4a
+cover/coverimg/dbg*
