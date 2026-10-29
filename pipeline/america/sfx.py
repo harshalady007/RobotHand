@@ -198,8 +198,8 @@ dip=np.convolve(dip,np.ones(int(.03*SR))/int(.03*SR),'same')
 # fade in/out
 mus*=dip*np.clip(t/.5,0,1)*np.clip((D-t)/1.2,0,1)
 vo,sr=sf.read('w/vo_final.wav',dtype='float32'); vo=vo[:N] if len(vo)>=N else np.pad(vo,(0,N-len(vo)))
-dv=duck_env(vo); duck=1-.55*np.clip(dv*1.6,0,1); duck=np.convolve(duck,np.ones(int(.1*SR))/int(.1*SR),'same').astype(np.float32)
-sfx_duck=1-.25*np.clip(dv*1.6,0,1); sfx_duck=np.convolve(sfx_duck,np.ones(int(.05*SR))/int(.05*SR),'same').astype(np.float32)
+dv=duck_env(vo); duck=1-.75*np.clip(dv*1.6,0,1); duck=np.convolve(duck,np.ones(int(.1*SR))/int(.1*SR),'same').astype(np.float32)
+sfx_duck=1-.55*np.clip(dv*1.6,0,1); sfx_duck=np.convolve(sfx_duck,np.ones(int(.05*SR))/int(.05*SR),'same').astype(np.float32)
 def comp(x,thr_db=-22,ratio=3.5,att=.004,rel=.15):
     lvl=np.abs(x).astype(np.float64); a=np.exp(-1/(att*SR)); r=np.exp(-1/(rel*SR)); env=np.zeros_like(lvl); e=0
     # fast envelope follower (vectorised with lfilter for release, approximate)
@@ -216,9 +216,9 @@ def limiter(x,thr=.88,look=.002,rel=.05):
     k=int(rel*SR); g=np.convolve(np.pad(g,(k//2,k//2),mode='edge'),np.ones(k)/k,'valid')[:len(x)]
     g=np.minimum(g,np.minimum(1,thr/np.maximum(env,1e-9)))
     return (x*g).astype(np.float32)
-sfxb=comp(S*.32*sfx_duck,-26,4.0)
+sfxb=comp(S*.20*sfx_duck,-26,4.0)
 vo_c=comp(vo,-30,2.5,.004,.2)*1.6
-mix=vo_c+mus*.30*duck+sfxb*1.0
+mix=vo_c+mus*.15*duck+sfxb*1.0
 mix=comp(mix,-24,3.0,.003,.12)
 mix=limiter(mix,.9)
 sf.write('mix_pre.wav',mix,SR)
