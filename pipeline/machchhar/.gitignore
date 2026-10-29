@@ -1,0 +1,17 @@
+node_modules/
+w/*.tar.bz2
+w/sherpa-onnx-*/
+w/*.wav
+w/*.mp3
+ne/
+stills/
+fr/
+*.log
+mix_*.wav
+Machchhar_Redrawn.mp4
+Machchhar_thumbnail.png
+dbg*.json
+video3d/part_*.mp4
+video3d/assets/*.png
+cover/coverimg/*.png
+cover/node_modules
