@@ -98,21 +98,26 @@ export function buildSea() {
   // ships
   S.dd = [destroyer(S), destroyer(S, 'us'), destroyer(S, 'jp')]; S.cs = [containerShip(S), containerShip(S, '#3a2a5a'), containerShip(S, '#2a5a4a'), containerShip(S, '#5a3a2a')]; S.cv = carrier(S);
   S.jets = []; for (let i = 0; i < 4; i++) S.jets.push(mkJet(S));
-  // anchor (gravity drop) + chain + splash
-  const ag = new THREE.Group(); S.add(ag); const steel = '#2b3036';
-  cyl(ag, .42, 6, 0, 0, 0, steel); cyl(ag, .3, 4, 0, 2.9, 0, steel, 0, Math.PI / 2, 8); const arm = new THREE.Mesh(new THREE.TorusGeometry(2.2, .42, 8, 18, Math.PI), M(steel)); arm.position.set(0, -2.6, 0); arm.rotation.z = Math.PI; ag.add(arm);
-  for (const s of [-1, 1]) { const f = new THREE.Mesh(new THREE.ConeGeometry(.9, 1.8, 4), M(steel)); f.position.set(s * 2.2, -2.6, 0); f.rotation.z = s * -1.9; ag.add(f); }
-  const ring = new THREE.Mesh(new THREE.TorusGeometry(.7, .2, 8, 12), M(steel)); ring.position.y = 3.4; ag.add(ring);
-  ag.visible = false; S.anchor = ag;
-  const links = []; for (let i = 0; i < 16; i++) { const l = new THREE.Mesh(new THREE.TorusGeometry(.45, .14, 6, 10), M('#3a4048')); l.visible = false; S.add(l); links.push(l); } S.links = links;
+  // anchor (gravity drop) + chain + splash: bright gold, big, outlined so it reads against sea and hull
+  const ag = new THREE.Group(); S.add(ag); const gold = '#f5b81c', dark = '#1a1208';
+  const aM = (c) => new THREE.MeshStandardMaterial({ color: c, flatShading: true, roughness: .45, metalness: .1, emissive: '#7a5200', emissiveIntensity: .45 });
+  const oM = new THREE.MeshBasicMaterial({ color: dark, side: THREE.BackSide });
+  const part = (geo, x, y, z, rx = 0, ry = 0, rz = 0) => { const m = new THREE.Mesh(geo, aM(gold)); m.position.set(x, y, z); m.rotation.set(rx, ry, rz); ag.add(m); const o = new THREE.Mesh(geo, oM); o.position.copy(m.position); o.rotation.copy(m.rotation); o.scale.setScalar(1.22); ag.add(o); };
+  part(new THREE.CylinderGeometry(.5, .5, 7, 10), 0, 0, 0);                         // shank
+  part(new THREE.CylinderGeometry(.4, .4, 4.6, 10), 0, 3.2, 0, 0, 0, Math.PI / 2);   // stock
+  part(new THREE.TorusGeometry(.85, .26, 8, 14), 0, 4.4, 0);                        // ring
+  part(new THREE.TorusGeometry(2.9, .5, 8, 20, Math.PI), 0, -3.0, 0, 0, 0, Math.PI);  // curved arms
+  for (const s of [-1, 1]) part(new THREE.ConeGeometry(1.1, 2.2, 4), s * 2.9, -3.0, 0, 0, 0, s * -2.0); // flukes
+  ag.scale.setScalar(1.15); ag.visible = false; S.anchor = ag;
+  const links = []; for (let i = 0; i < 18; i++) { const l = new THREE.Mesh(new THREE.TorusGeometry(.7, .22, 6, 10), M('#d9dde4')); l.visible = false; S.add(l); links.push(l); } S.links = links;
   const splashT = tex(64, 64, (c) => { const gr = c.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = gr; c.fillRect(0, 0, 64, 64); });
   S.splash = []; for (let i = 0; i < 26; i++) { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: splashT, transparent: true, depthWrite: false, opacity: 0 })); S.add(s); S.splash.push(s); }
   S.splashRing = new THREE.Mesh(new THREE.RingGeometry(.9, 1.2, 40), new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false })); S.splashRing.rotation.x = -Math.PI / 2; S.add(S.splashRing);
   // anchor drop: released at t0 from hawse (x,y,z), free fall under g, enters water, splash
-  S.dropAnchor = (t, t0, hx, hy, hz, wy = 0) => { const G = 9.81, k = t - t0; if (k < 0) { ag.visible = false; links.forEach(l => l.visible = false); return; } const fall = hy - wy; const tf = Math.sqrt(2 * fall / G); const y = k < tf ? hy - .5 * G * k * k : wy - Math.min(8, (k - tf) * 3.5); ag.visible = true; ag.position.set(hx, y + 3, hz); ag.rotation.set(0, 0, Math.sin(k * 3) * (k < tf ? .25 : .05));
-    links.forEach((l, i) => { const u = (i + 1) / links.length; l.visible = true; l.position.set(hx - u * .6, hy + (y + 3 - hy) * u, hz); l.rotation.set(i % 2 ? 0 : Math.PI / 2, 0, 0); });
-    const ks = k - tf; S.splashRing.visible = ks > 0 && ks < 1.4; if (ks > 0) { S.splashRing.position.set(hx, wy + .25, hz); S.splashRing.scale.setScalar(1 + ks * 7); S.splashRing.material.opacity = Math.max(0, .9 - ks * .65); }
-    S.splash.forEach((s, i) => { if (ks < 0 || ks > 1.6) { s.material.opacity = 0; return; } const a = hash(i * 3.3) * 6.28, v = 3 + hash(i * 7.1) * 7, vy = 8 + hash(i * 5.9) * 9; const x = hx + Math.cos(a) * v * ks * .6, z = hz + Math.sin(a) * v * ks * .6, yy = wy + vy * ks - .5 * G * ks * ks; s.position.set(x, Math.max(wy, yy), z); s.scale.setScalar(1.6 + ks * 2.4); s.material.opacity = Math.max(0, 1 - ks / 1.5) * (yy > wy - .2 ? 1 : 0); }); };
+  S.dropAnchor = (t, t0, hx, hy, hz, wy = 0) => { const G = 9.81, k = t - t0; if (k < 0) { ag.visible = false; links.forEach(l => l.visible = false); return; } const fall = hy - wy; const tf = Math.sqrt(2 * fall / G); const y = k < tf ? hy - .5 * G * k * k : wy - Math.min(8, (k - tf) * 3.5); const dr = 6.5 * sm(Math.min(1, k / tf)); const az = hz + dr; ag.visible = true; ag.position.set(hx, y + 4, az); ag.rotation.set(0, 0, Math.sin(k * 3) * (k < tf ? .18 : .04));
+    links.forEach((l, i) => { const u = (i + 1) / links.length; l.visible = true; l.position.set(hx, hy + (y + 4 + 4.4 - hy) * u, hz + dr * u); l.rotation.set(i % 2 ? 0 : Math.PI / 2, 0, 0); });
+    const ks = k - tf; S.splashRing.visible = ks > 0 && ks < 1.4; if (ks > 0) { S.splashRing.position.set(hx, wy + .25, az); S.splashRing.scale.setScalar(1 + ks * 7); S.splashRing.material.opacity = Math.max(0, .9 - ks * .65); }
+    S.splash.forEach((s, i) => { if (ks < 0 || ks > 1.6) { s.material.opacity = 0; return; } const a = hash(i * 3.3) * 6.28, v = 3 + hash(i * 7.1) * 7, vy = 8 + hash(i * 5.9) * 9; const x = hx + Math.cos(a) * v * ks * .6, z = az + Math.sin(a) * v * ks * .6, yy = wy + vy * ks - .5 * G * ks * ks; s.position.set(x, Math.max(wy, yy), z); s.scale.setScalar(1.6 + ks * 2.4); s.material.opacity = Math.max(0, 1 - ks / 1.5) * (yy > wy - .2 ? 1 : 0); }); };
   // chars on the quay
   const ch = {}; for (let i = 0; i < 4; i++) ch['s' + i] = new Char(S, SAILOR(i), 2.4); for (let i = 0; i < 3; i++) ch['c' + i] = new Char(S, CREW(i), 2.4); ch.g0 = new Char(S, GI(0), 2.4); S.chars = ch;
   S.hideAll = () => { S.dd.forEach(s => { s.g.visible = false; s.wake.visible = false; }); S.cs.forEach(s => { s.g.visible = false; s.wake.visible = false; }); S.cv.g.visible = false; S.cv.wake.visible = false; S.jets.forEach(j => j.show(false)); ag.visible = false; links.forEach(l => l.visible = false); S.splashRing.visible = false; S.splash.forEach(s => s.material.opacity = 0); };
