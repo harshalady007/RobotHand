@@ -1,0 +1,12 @@
+node_modules
+stills/
+ne/
+w/*
+!w/asr.py
+!w/align.py
+video3d/part_*.mp4
+video3d/node_modules
+cover/node_modules
+cover/coverimg/hero_*.png
+mix_pre.wav
+*.wav
